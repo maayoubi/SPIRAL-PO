@@ -1,0 +1,5 @@
+pipeline,eqn,terms,closure_R2adj,heldout_gain_pct,true_closure_gain_pct,termination,iterations
+"pointwise","x","x^2*y + (x^2+y^2)*xdot + y + (x^2+y^2)*x + Omega*ydot + Omegadot*x",0.16108,1.96955,1.9873,"Gate 2: nothing admitted",4
+"pointwise","y","y^3 + Omegadot*y + x*y^2 + (x^2+y^2)*ydot",0.240657,0.738633,0.752601,"Gate 2: nothing admitted",3
+"valid","x","(x^2+y^2)*x",0.0593407,1.27401,1.28629,"Gate 2: nothing admitted",2
+"valid","y","",0,0,0,"Gate 2: nothing admitted",1

@@ -1,0 +1,3 @@
+set,kappa,mu_Phi,rank,n_columns,singular_values,columns
+full,34.95,0.004014,12,12,"[2.214 1.702 1.235 1.05 0.7131 0.5864 0.5409 0.4077 0.34 0.3048 0.226 0.06335]","unb_cos ; unb_sin ; -self_dot ; -self ; Omega*ydot ; y ; (x^2+y^2)*x ; (x^2+y^2)*xdot ; x^3 ; x^2*y ; Omega^2*x ; Omegadot*x"
+representatives,5.196,0.111,9,9,"[1.731 1.573 1.158 0.9844 0.6745 0.5662 0.4325 0.3801 0.3331]","unb_cos ; unb_sin ; -self_dot ; -self ; Omega*ydot ; y ; (x^2+y^2)*x ; (x^2+y^2)*xdot ; x^2*y"

@@ -1,0 +1,89 @@
+SPIRAL-PO revision studies, part A, 27-Oct-2026 13:03:12
+
+[0] max |rhs(extended defaults) - rhs(plain model)| = 2.27e-13
+
+[1] Nominal benchmark (Table 1 configuration): 8 s, 60 -> 5 Hz, dt = 0.0005 s, noise 2%, SG windows 31/31, N = 16001
+    pointwise x-eq: x^2*y, (x^2+y^2)*xdot, y, (x^2+y^2)*x, Omega*ydot, Omegadot*x | closure R2adj 0.161 | held-out gain   1.97% (true closure   1.99%) | stop: Gate 2: nothing admitted
+        iter 1: Ljung-Box Q=8700.8 (crit 31.4, p=0, m=20); held-out NN R2=0.203 (p=5.82e-05)
+        iter 2: Ljung-Box Q=8523.1 (crit 31.4, p=0, m=20); held-out NN R2=0.189 (p=2.49e-05)
+        iter 3: Ljung-Box Q=8510.2 (crit 31.4, p=0, m=20); held-out NN R2=0.166 (p=8.09e-07)
+        iter 4: Ljung-Box Q=9320.2 (crit 31.4, p=0, m=20); held-out NN R2=0.020 (p=0.0277)
+        unb_cos          +7.6569e-03  SE_boot 2.35e-05  SE_ols 1.07e-05  95% CI [+7.621e-03, +7.714e-03]  p_boot 0.001
+        unb_sin          -5.6677e-03  SE_boot 4.12e-05  SE_ols 1.04e-05  95% CI [-5.769e-03, -5.615e-03]  p_boot 0.001
+        -self_dot        +1.9468e+00  SE_boot 7.71e-01  SE_ols 3.10e-01  95% CI [+3.073e-01, +3.170e+00]  p_boot 0.002
+        -self            -2.0956e+02  SE_boot 4.48e+02  SE_ols 1.43e+02  95% CI [-1.208e+03, +6.429e+02]  p_boot 0.762
+        x^2*y            +4.0433e+04  SE_boot 3.25e+04  SE_ols 1.99e+04  95% CI [-5.633e+04, +7.632e+04]  p_boot 0.69
+        (x^2+y^2)*xdot   +1.0219e+03  SE_boot 4.70e+02  SE_ols 1.15e+02  95% CI [-1.266e+02, +1.659e+03]  p_boot 0.158
+        y                +4.7600e+01  SE_boot 2.63e+01  SE_ols 1.61e+01  95% CI [-1.219e+01, +8.926e+01]  p_boot 0.188
+        (x^2+y^2)*x      -5.2047e+05  SE_boot 1.82e+04  SE_ols 9.67e+03  95% CI [-5.519e+05, -4.838e+05]  p_boot 0.001
+        Omega*ydot       -3.7498e-03  SE_boot 1.13e-03  SE_ols 8.61e-04  95% CI [-4.896e-03, -2.621e-04]  p_boot 0.014
+        Omegadot*x       +2.3641e+01  SE_boot 1.02e+01  SE_ols 3.31e+00  95% CI [+4.148e+00, +4.543e+01]  p_boot 0.018
+    pointwise y-eq: y^3, Omegadot*y, x*y^2, (x^2+y^2)*ydot                       | closure R2adj 0.241 | held-out gain   0.74% (true closure   0.75%) | stop: Gate 2: nothing admitted
+        iter 1: Ljung-Box Q=9941.1 (crit 31.4, p=0, m=20); held-out NN R2=0.293 (p=3.12e-06)
+        iter 2: Ljung-Box Q=9698.6 (crit 31.4, p=0, m=20); held-out NN R2=0.056 (p=8.33e-05)
+        iter 3: Ljung-Box Q=9653.8 (crit 31.4, p=0, m=20); held-out NN R2=0.037 (p=0.0125)
+        unb_cos          +5.6829e-03  SE_boot 3.41e-05  SE_ols 9.44e-06  95% CI [+5.641e-03, +5.771e-03]  p_boot 0.001
+        unb_sin          +7.7097e-03  SE_boot 2.45e-05  SE_ols 8.12e-06  95% CI [+7.655e-03, +7.750e-03]  p_boot 0.001
+        -self_dot        +2.4303e+00  SE_boot 8.39e-01  SE_ols 2.90e-01  95% CI [+6.306e-01, +3.674e+00]  p_boot 0.001
+        -self            +1.0492e+03  SE_boot 3.12e+02  SE_ols 1.02e+02  95% CI [+3.234e+02, +1.616e+03]  p_boot 0.002
+        y^3              -5.4223e+05  SE_boot 2.52e+04  SE_ols 8.65e+03  95% CI [-5.921e+05, -4.930e+05]  p_boot 0.001
+        Omegadot*y       -1.3095e+00  SE_boot 6.94e+00  SE_ols 2.32e+00  95% CI [-1.473e+01, +1.512e+01]  p_boot 0.884
+        x*y^2            -1.0186e+05  SE_boot 6.27e+04  SE_ols 1.86e+04  95% CI [-2.433e+05, -2.940e+03]  p_boot 0.048
+        (x^2+y^2)*ydot   +8.8772e+02  SE_boot 5.57e+02  SE_ols 1.24e+02  95% CI [-3.364e+02, +1.828e+03]  p_boot 0.294
+    valid   x-eq: (x^2+y^2)*x                                                  | closure R2adj 0.059 | held-out gain   1.27% (true closure   1.29%) | stop: Gate 2: nothing admitted
+        iter 1: Ljung-Box Q=21.6 (crit 31.4, p=0.365, m=20); held-out NN R2=0.282 (p=0.0105)
+        iter 2: Ljung-Box Q=30.4 (crit 31.4, p=0.0636, m=20); held-out NN R2=0.192 (p=0.000789)
+        unb_cos          +7.7080e-03  SE_boot 3.17e-05  SE_ols 7.69e-06  95% CI [+7.642e-03, +7.764e-03]  p_boot 0.001
+        unb_sin          -5.6554e-03  SE_boot 4.86e-05  SE_ols 9.07e-06  95% CI [-5.770e-03, -5.589e-03]  p_boot 0.001
+        -self_dot        +1.9027e+00  SE_boot 6.66e-01  SE_ols 2.86e-01  95% CI [+5.532e-01, +2.968e+00]  p_boot 0.001
+        -self            +8.0477e+02  SE_boot 4.23e+01  SE_ols 2.28e+01  95% CI [+7.275e+02, +8.891e+02]  p_boot 0.001
+        (x^2+y^2)*x      -5.1749e+05  SE_boot 1.72e+04  SE_ols 9.09e+03  95% CI [-5.500e+05, -4.840e+05]  p_boot 0.001
+    valid   y-eq:                                                              | closure R2adj 0.000 | held-out gain   0.00% (true closure   0.00%) | stop: Gate 2: nothing admitted
+        iter 1: Ljung-Box Q=85.1 (crit 31.4, p=5.34e-10, m=20); held-out NN R2=0.220 (p=0.000404)
+        unb_cos          +5.6800e-03  SE_boot 4.47e-05  SE_ols 1.06e-05  95% CI [+5.624e-03, +5.791e-03]  p_boot 0.001
+        unb_sin          +7.7410e-03  SE_boot 3.01e-05  SE_ols 9.17e-06  95% CI [+7.671e-03, +7.792e-03]  p_boot 0.001
+        -self_dot        +1.9535e+00  SE_boot 5.35e-01  SE_ols 3.15e-01  95% CI [+6.962e-01, +2.737e+00]  p_boot 0.001
+        -self            +2.0340e+03  SE_boot 1.39e+02  SE_ols 1.56e+01  95% CI [+1.699e+03, +2.258e+03]  p_boot 0.001
+    conditioning x-eq: full library  kappa=35 mu_Phi=0.00401 rank=12/12 | representatives kappa=5.2 mu_Phi=0.111 (unb_cos, unb_sin, -self_dot, -self, Omega*ydot, y, (x^2+y^2)*x, (x^2+y^2)*xdot, x^2*y)
+    conditioning y-eq: full library  kappa=24.6 mu_Phi=0.00789 rank=12/12 | representatives kappa=5.43 mu_Phi=0.102 (unb_cos, unb_sin, -self_dot, -self, Omega*xdot, x, (x^2+y^2)*y, (x^2+y^2)*ydot, x*y^2)
+
+[2] Ablations (noise realizations [31 41 51])
+    rep 31 full (valid statistics) gain x/y   1.27/  0.00% | k=20 NRMSE 0.626/0.507 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 31 gated network (pointwise) gain x/y   1.97/  0.74% | k=20 NRMSE 0.629/0.503 | gyro 0 duff 1 cross 0 | x: x^2*y, (x^2+y^2)*xdot, y, (x^2+y^2)*x, Omega*ydot, Omegadot*x | y: y^3, Omegadot*y, x*y^2, (x^2+y^2)*ydot
+    rep 31 A2 no NN (direct)      gain x/y   1.27/  0.00% | k=20 NRMSE 0.626/0.507 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 31 A3 no gating (STLSQ)   gain x/y   1.15/  0.36% | k=20 NRMSE 0.627/0.504 | gyro 0 duff 1 cross 0 | x: (x^2+y^2)*x, x^3, Omegadot*x | y: (x^2+y^2)*y, (x^2+y^2)*ydot, y^3, x*y^2, Omega^2*y, Omegadot*y
+    rep 31 A4 NN on trajectory    gain x/y   1.27/  0.00% | k=20 NRMSE 0.626/0.507 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 31 A4b NN on Halton box   gain x/y   1.27/  0.00% | k=20 NRMSE 0.626/0.507 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 31 A5 no physics seed     gain x/y   1.84/  0.33% | k=20 NRMSE 0.625/0.506 | gyro 1 duff 0 cross 0 | x: Omega*ydot, unb_cos, unb_sin, -self, (x^2+y^2)*x | y: Omega*xdot, unb_cos, -self, x
+    rep 31 HAVOK r=15: k=20 NRMSE forced 0.337/0.678, frozen 1.117/0.739; k=100 forced 0.394/1.223, frozen 2.123/2.484
+    rep 41 full (valid statistics) gain x/y   1.25/  0.00% | k=20 NRMSE 0.627/0.509 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 41 gated network (pointwise) gain x/y   1.88/  0.72% | k=20 NRMSE 0.630/0.505 | gyro 0 duff 1 cross 1 | x: (x^2+y^2)*x, Omega*ydot, x^2*y, (x^2+y^2)*xdot, y, Omegadot*x, x^3 | y: Omegadot*y, (x^2+y^2)*ydot, y^3, x, x*y^2
+    rep 41 A2 no NN (direct)      gain x/y   1.25/  0.00% | k=20 NRMSE 0.627/0.509 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 41 A3 no gating (STLSQ)   gain x/y   1.18/  0.34% | k=20 NRMSE 0.628/0.505 | gyro 0 duff 1 cross 0 | x: (x^2+y^2)*x, x^3, Omega^2*x, Omegadot*x | y: x, (x^2+y^2)*y, (x^2+y^2)*ydot, y^3, Omega^2*y, Omegadot*y
+    rep 41 A4 NN on trajectory    gain x/y   1.25/  0.00% | k=20 NRMSE 0.627/0.509 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 41 A4b NN on Halton box   gain x/y   1.25/  0.00% | k=20 NRMSE 0.627/0.509 | gyro 0 duff 0 cross 0 | x: (x^2+y^2)*x | y: 
+    rep 41 A5 no physics seed     gain x/y   1.84/  1.57% | k=20 NRMSE 0.626/0.501 | gyro 1 duff 1 cross 0 | x: Omega*ydot, unb_cos, unb_sin, -self, (x^2+y^2)*x | y: Omega*xdot, unb_cos, Omegadot*y, unb_sin, y^3
+    rep 41 HAVOK r=15: k=20 NRMSE forced 0.336/0.677, frozen 1.117/0.738; k=100 forced 0.393/1.221, frozen 2.120/2.483
+    rep 51 full (valid statistics) gain x/y   0.00/  0.00% | k=20 NRMSE 0.637/0.507 | gyro 0 duff 0 cross 0 | x:  | y: 
+    rep 51 gated network (pointwise) gain x/y   2.02/  0.78% | k=20 NRMSE 0.630/0.502 | gyro 0 duff 1 cross 1 | x: (x^2+y^2)*x, Omega*ydot, x^2*y, y, (x^2+y^2)*xdot, Omegadot*x, x^3 | y: y^3, Omegadot*y, x, x*y^2
+    rep 51 A2 no NN (direct)      gain x/y   0.00/  0.00% | k=20 NRMSE 0.637/0.507 | gyro 0 duff 0 cross 0 | x:  | y: 
+    rep 51 A3 no gating (STLSQ)   gain x/y   1.10/  0.37% | k=20 NRMSE 0.631/0.503 | gyro 0 duff 1 cross 0 | x: (x^2+y^2)*x, (x^2+y^2)*xdot, x^3, Omegadot*x | y: (x^2+y^2)*y, (x^2+y^2)*ydot, y^3, x*y^2, Omega^2*y, Omegadot*y
+    rep 51 A4 NN on trajectory    gain x/y   0.00/  0.00% | k=20 NRMSE 0.637/0.507 | gyro 0 duff 0 cross 0 | x:  | y: 
+    rep 51 A4b NN on Halton box   gain x/y   0.00/  0.00% | k=20 NRMSE 0.637/0.507 | gyro 0 duff 0 cross 0 | x:  | y: 
+    rep 51 A5 no physics seed     gain x/y   1.92/  0.41% | k=20 NRMSE 0.625/0.506 | gyro 1 duff 0 cross 0 | x: Omega*ydot, unb_cos, unb_sin, -self, (x^2+y^2)*x | y: Omega*xdot, unb_cos, -self, x
+    rep 51 HAVOK r=15: k=20 NRMSE forced 0.337/0.678, frozen 1.118/0.739; k=100 forced 0.394/1.223, frozen 2.123/2.487
+
+[3] Knock-out controls (a mechanism absent from the data must not be admitted)
+    no_duffing rep 31 pointwise gyro admitted 1, cubic admitted 0 | gain   1.54/  0.20% | x: Omega*ydot, (x^2+y^2)*xdot | y: x, (x^2+y^2)*ydot
+    no_duffing rep 31 valid   gyro admitted 0, cubic admitted 0 | gain   0.00/  0.00% | x:  | y: 
+    no_duffing rep 41 pointwise gyro admitted 0, cubic admitted 1 | gain   0.02/ -0.10% | x: (x^2+y^2)*xdot | y: (x^2+y^2)*ydot, x*y^2
+    no_duffing rep 41 valid   gyro admitted 0, cubic admitted 0 | gain   0.00/  0.00% | x:  | y: 
+    no_duffing rep 51 pointwise gyro admitted 1, cubic admitted 0 | gain   2.14/  0.19% | x: (x^2+y^2)*xdot, Omega*ydot | y: (x^2+y^2)*ydot, x
+    no_duffing rep 51 valid   gyro admitted 0, cubic admitted 0 | gain   0.00/  0.00% | x:  | y: 
+    no_gyro    rep 31 pointwise gyro admitted 1, cubic admitted 1 | gain   1.88/  0.53% | x: (x^2+y^2)*x, Omega*ydot, x^2*y, (x^2+y^2)*xdot, y, x^3, Omegadot*x | y: (x^2+y^2)*ydot, Omegadot*y, y^3, x, x*y^2
+    no_gyro    rep 31 valid   gyro admitted 0, cubic admitted 1 | gain   1.43/  0.00% | x: (x^2+y^2)*x | y: 
+    no_gyro    rep 41 pointwise gyro admitted 1, cubic admitted 1 | gain   1.87/  0.52% | x: (x^2+y^2)*x, (x^2+y^2)*xdot, y, x^2*y, Omega*ydot, Omegadot*x, x^3 | y: Omegadot*y, y^3, x, x*y^2
+    no_gyro    rep 41 valid   gyro admitted 0, cubic admitted 1 | gain   1.40/  0.00% | x: (x^2+y^2)*x | y: 
+    no_gyro    rep 51 pointwise gyro admitted 1, cubic admitted 1 | gain   2.01/  0.56% | x: (x^2+y^2)*x, (x^2+y^2)*xdot, y, x^2*y, Omega*ydot, Omegadot*x, x^3 | y: Omegadot*y, y^3, x, x*y^2
+    no_gyro    rep 51 valid   gyro admitted 0, cubic admitted 0 | gain   0.00/  0.00% | x:  | y: 
+

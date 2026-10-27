@@ -1,0 +1,7 @@
+Single-channel weak-form |t| (Bonferroni threshold 2.50)
+nominal     exact    t: s^3   -5.9  s^2*sdot    1.2  Omega^2*s  -14.7  Omegadot*s   -5.9  -> selected: s^3, Omega^2*s, Omegadot*s
+nominal     tracked  t: s^3   -4.5  s^2*sdot    1.5  Omega^2*s  -12.9  Omegadot*s    NaN  -> selected: s^3, Omega^2*s
+no_gyro     exact    t: s^3   -6.6  s^2*sdot    1.1  Omega^2*s  -14.1  Omegadot*s   -5.4  -> selected: s^3, Omega^2*s, Omegadot*s
+no_gyro     tracked  t: s^3   -5.0  s^2*sdot    1.4  Omega^2*s  -13.6  Omegadot*s    NaN  -> selected: s^3, Omega^2*s
+no_duffing  exact    t: s^3   -0.4  s^2*sdot   -1.7  Omega^2*s    0.3  Omegadot*s   -1.3  -> selected: 
+no_duffing  tracked  t: s^3    0.4  s^2*sdot   -1.2  Omega^2*s   -0.7  Omegadot*s    0.1  -> selected: 

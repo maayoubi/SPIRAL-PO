@@ -1,0 +1,25 @@
+Weak-form selection versus measurement noise (seed 31 trajectory, 5 realizations each)
+  nominal    noise  0.5% x-eq: gyro 1.0 cubic 1.0 cross 0.0 mean# 3.6
+  nominal    noise  0.5% y-eq: gyro 1.0 cubic 1.0 cross 0.0 mean# 3.4
+  nominal    noise  2.0% x-eq: gyro 1.0 cubic 1.0 cross 0.0 mean# 2.0
+  nominal    noise  2.0% y-eq: gyro 1.0 cubic 1.0 cross 0.0 mean# 2.0
+  nominal    noise  5.0% x-eq: gyro 0.8 cubic 1.0 cross 0.0 mean# 1.8
+  nominal    noise  5.0% y-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  nominal    noise 10.0% x-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  nominal    noise 10.0% y-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  no_duffing noise  0.5% x-eq: gyro 1.0 cubic 0.4 cross 0.0 mean# 1.8
+  no_duffing noise  0.5% y-eq: gyro 0.0 cubic 0.0 cross 0.0 mean# 1.0
+  no_duffing noise  2.0% x-eq: gyro 0.0 cubic 0.2 cross 0.0 mean# 0.4
+  no_duffing noise  2.0% y-eq: gyro 0.0 cubic 0.0 cross 0.0 mean# 0.0
+  no_duffing noise  5.0% x-eq: gyro 0.0 cubic 0.0 cross 0.0 mean# 0.0
+  no_duffing noise  5.0% y-eq: gyro 0.0 cubic 0.0 cross 0.0 mean# 0.2
+  no_duffing noise 10.0% x-eq: gyro 0.0 cubic 0.0 cross 0.0 mean# 0.0
+  no_duffing noise 10.0% y-eq: gyro 0.0 cubic 0.0 cross 0.0 mean# 0.2
+  no_gyro    noise  0.5% x-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 2.2
+  no_gyro    noise  0.5% y-eq: gyro 0.0 cubic 1.0 cross 0.2 mean# 1.8
+  no_gyro    noise  2.0% x-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  no_gyro    noise  2.0% y-eq: gyro 0.0 cubic 1.0 cross 0.2 mean# 1.2
+  no_gyro    noise  5.0% x-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  no_gyro    noise  5.0% y-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  no_gyro    noise 10.0% x-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0
+  no_gyro    noise 10.0% y-eq: gyro 0.0 cubic 1.0 cross 0.0 mean# 1.0

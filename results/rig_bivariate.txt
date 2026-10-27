@@ -1,0 +1,48 @@
+Simultaneous x-y coast-down: 6700 samples at 1000 Hz (6.70 s); speed column 32.4 -> 0.0 Hz (straight line)
+
+(1) Speed column minus order-tracked speed (1.95 Hz bins, x and y averaged), where tracked speed > 3 Hz:
+    mean 3.64 Hz, RMS 4.09 Hz, max 5.92 Hz
+    t = 0.5 s: tracked  29.0 Hz, speed column  30.0 Hz
+    t = 1.5 s: tracked  22.0 Hz, speed column  25.1 Hz
+    t = 2.5 s: tracked  15.8 Hz, speed column  20.3 Hz
+    t = 3.5 s: tracked   9.5 Hz, speed column  15.5 Hz
+    t = 4.5 s: tracked   6.1 Hz, speed column  10.6 Hz
+    t = 5.5 s: tracked   2.9 Hz, speed column   5.8 Hz
+    x: power above background along tracked / line: 1x 57.3 / 32.4 dB, 2x 21.9 / -1.8 dB
+    y: power above background along tracked / line: 1x 54.9 / 43.0 dB, 2x 22.6 / 3.6 dB
+    x-y magnitude-squared coherence: max 0.989 at 5.9 Hz
+
+(2) Weak-form identification, tracked speed (5.45 s used, 106 test functions per equation)
+    x-eq t: Omega*ydot -2.7 | y -1.5 | (x^2+y^2)*x 2.2 | (x^2+y^2)*xdot 1.5 | x^3 -0.6 | x^2*y 1.6 | Omega^2*x -12.1 | Omegadot*x 0.4 |
+        selected (|t| > 2.73): Omega^2*x
+        pointwise OLS (classical SE) would select: Omega*ydot, y, (x^2+y^2)*x, (x^2+y^2)*xdot, x^3, x^2*y, Omega^2*x, Omegadot*x
+    y-eq t: Omega*xdot 1.8 | x -2.1 | (x^2+y^2)*y 1.4 | (x^2+y^2)*ydot -1.2 | y^3 -2.0 | x*y^2 0.6 | Omega^2*y -6.5 | Omegadot*y 0.3 |
+        selected (|t| > 2.73): Omega^2*y
+        pointwise OLS (classical SE) would select: Omega*xdot, x, (x^2+y^2)*y, (x^2+y^2)*ydot, y^3, x*y^2, Omega^2*y, Omegadot*y
+
+(3) Robustness: window 256/512/1024 samples x speed from x, y or both
+     256 x    | x: Omega^2*x                        | y: Omega*xdot, x, Omega^2*y, Omegadot*y
+     256 y    | x: Omega^2*x                        | y: Omega*xdot, x, (x^2+y^2)*ydot, Omega^2*y
+     256 both | x: Omega^2*x                        | y: Omega*xdot, x, (x^2+y^2)*ydot, Omega^2*y, Omegadot*y
+     512 x    | x: Omega*ydot, Omega^2*x            | y: Omega^2*y
+     512 y    | x: Omega*ydot, Omega^2*x            | y: x, (x^2+y^2)*ydot, Omega^2*y
+     512 both | x: Omega^2*x                        | y: Omega^2*y
+    1024 x    | x: Omega^2*x                        | y: y^3, Omega^2*y
+    1024 y    | x: Omega^2*x                        | y: y^3, x*y^2, Omega^2*y, Omegadot*y
+    1024 both | x: Omega^2*x                        | y: (x^2+y^2)*y, y^3, Omega^2*y, Omegadot*y
+    selection counts over 9 settings: (x^2+y^2)*y 1/9; (x^2+y^2)*ydot 3/9; Omega*xdot 3/9; Omega*ydot 2/9; Omega^2*x 9/9; Omega^2*y 9/9; Omegadot*y 4/9; x 4/9; x*y^2 1/9; y^3 3/9; 
+
+(4) Weak form with the speed column (constant-deceleration line)
+    x-eq selected: Omega*ydot, (x^2+y^2)*x, Omega^2*x
+    y-eq selected: x, (x^2+y^2)*y, y^3, Omega^2*y
+
+(5) Synthetic control: exact speed / bin-limited tracked speed / straight line starting 4 Hz too high
+    nominal    exact      x: Omega*ydot, (x^2+y^2)*x                  y: Omega*xdot, (x^2+y^2)*y
+    nominal    tracked    x: Omega*ydot, (x^2+y^2)*x                  y: Omega*xdot, (x^2+y^2)*y
+    nominal    line +4 Hz x:                                          y: Omega*xdot, Omega^2*y
+    no_gyro    exact      x: (x^2+y^2)*x                              y: (x^2+y^2)*y
+    no_gyro    tracked    x: (x^2+y^2)*x                              y: (x^2+y^2)*y
+    no_gyro    line +4 Hz x: Omega*ydot, (x^2+y^2)*x, Omega^2*x       y: Omega*xdot, Omega^2*y
+    no_duffing exact      x:                                          y: 
+    no_duffing tracked    x:                                          y: 
+    no_duffing line +4 Hz x: Omega*ydot, (x^2+y^2)*xdot               y: Omega*xdot, x, Omega^2*y

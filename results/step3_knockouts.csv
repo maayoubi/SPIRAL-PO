@@ -1,0 +1,13 @@
+case,noise_seed,pipeline,x_terms,y_terms,gyro_in_any_eq,cubic_in_any_eq,gain_x_pct,gain_y_pct
+"no_duffing",31,"pointwise","Omega*ydot + (x^2+y^2)*xdot","x + (x^2+y^2)*ydot",1,0,1.5419,0.197021
+"no_duffing",31,"valid","","",0,0,0,0
+"no_duffing",41,"pointwise","(x^2+y^2)*xdot","(x^2+y^2)*ydot + x*y^2",0,1,0.0205808,-0.099564
+"no_duffing",41,"valid","","",0,0,0,0
+"no_duffing",51,"pointwise","(x^2+y^2)*xdot + Omega*ydot","(x^2+y^2)*ydot + x",1,0,2.14019,0.194314
+"no_duffing",51,"valid","","",0,0,0,0
+"no_gyro",31,"pointwise","(x^2+y^2)*x + Omega*ydot + x^2*y + (x^2+y^2)*xdot + y + x^3 + Omegadot*x","(x^2+y^2)*ydot + Omegadot*y + y^3 + x + x*y^2",1,1,1.88009,0.525891
+"no_gyro",31,"valid","(x^2+y^2)*x","",0,1,1.43034,0
+"no_gyro",41,"pointwise","(x^2+y^2)*x + (x^2+y^2)*xdot + y + x^2*y + Omega*ydot + Omegadot*x + x^3","Omegadot*y + y^3 + x + x*y^2",1,1,1.86931,0.520053
+"no_gyro",41,"valid","(x^2+y^2)*x","",0,1,1.40427,0
+"no_gyro",51,"pointwise","(x^2+y^2)*x + (x^2+y^2)*xdot + y + x^2*y + Omega*ydot + Omegadot*x + x^3","Omegadot*y + y^3 + x + x*y^2",1,1,2.00594,0.555053
+"no_gyro",51,"valid","","",0,0,0,0

@@ -1,0 +1,19 @@
+Single-channel rig identification (raw ILD1420 records, 4000 Hz -> 2000 Hz)
+Each record is one direction from a separate run; no bivariate terms are used.
+
+record X: 0 dropout samples replaced, 21.9 s used, Omega 60.6 -> 3.0 Hz, SG window 31, peak RMS 0.816 mm at 9.4 Hz, 59->10 Hz in 15.2 s
+record Y: 2 dropout samples replaced, 22.6 s used, Omega 61.2 -> 3.0 Hz, SG window 21, peak RMS 1.049 mm at 11.8 Hz, 59->10 Hz in 14.7 s
+
+Identification on record X (weak form, 432 test functions; Bonferroni |t| > 2.50 over 4 terms)
+   term                  coeff   t (weak)    t (OLS)     selected
+   s^3             -3.1853e+07      -0.08       7.93            0
+   s^2*sdot        +9.8969e+06       0.70       2.03            0
+   Omega^2*s       -1.0454e-01      -9.07     -70.76            1
+   Omegadot*s      +7.3061e+01       3.48       5.32            1
+   seed: k/m = 3154 1/s^2 (f_n = 8.94 Hz), c/m = 1.836 1/s
+
+Held-out check (physical coefficients fixed; unbalance amplitude/phase refitted per record)
+   record X (fit record): share of post-seed residual explained by the selected terms =   8.75%
+   record Y: share of post-seed residual explained by the selected terms =  14.23%
+
+Selected terms: Omega^2*s, Omegadot*s

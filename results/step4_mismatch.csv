@@ -1,0 +1,9 @@
+case,pipeline,x_terms,y_terms,gain_x_pct,gain_y_pct,true_gain_x_pct,true_gain_y_pct,nrmse_k20_x,nrmse_k20_y,stop_x,stop_y
+"aniso","pointwise","(x^2+y^2)*x + (x^2+y^2)*xdot + y + Omega*ydot + Omegadot*x + x^3","Omegadot*y + x*y^2 + y^3 + Omega*xdot + (x^2+y^2)*ydot + x",2.72411,0.964897,2.75379,0.971679,0.480713,0.844304,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"aniso","valid","","",0,0,0,0,0.494129,0.837489,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"hysteresis","pointwise","x^2*y + (x^2+y^2)*x + Omegadot*x + Omega*ydot","(x^2+y^2)*y + (x^2+y^2)*ydot + x + x*y^2 + Omega*xdot + Omegadot*y",1.62897,6.25373,1.63247,6.29776,1.00197,0.657015,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"hysteresis","valid","","x",0,0.308766,0,0.310153,1.01274,0.660961,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"params","pointwise","Omega^2*x + x^2*y + (x^2+y^2)*xdot + Omega*ydot + (x^2+y^2)*x + x^3 + Omegadot*x","",2.41057,0,2.43896,0,0.537275,0.472622,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"params","valid","(x^2+y^2)*x","",1.75474,0,1.77779,0,0.536662,0.472622,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"runup","pointwise","Omega*ydot + (x^2+y^2)*xdot + Omegadot*x + y + x^2*y","Omega*xdot + (x^2+y^2)*ydot + Omegadot*y + x + x*y^2",99.4977,93.4542,99.6392,93.5848,0.984826,0.68581,"Gate 2: nothing admitted","Gate 2: nothing admitted"
+"runup","valid","","",0,0,0,0,11.9393,16.7663,"Gate 2: nothing admitted","Gate 2: nothing admitted"

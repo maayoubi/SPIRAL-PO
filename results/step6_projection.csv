@@ -1,0 +1,7 @@
+projection,x_terms,y_terms,gain_x_pct,gain_y_pct
+"direct (no NN)","(x^2+y^2)*x","",1.27401,0
+"NN on trajectory","(x^2+y^2)*x","",1.27401,0
+"tube sigma=0.05","(x^2+y^2)*x","",1.27401,0
+"tube sigma=0.1","(x^2+y^2)*x","",1.27401,0
+"tube sigma=0.3","(x^2+y^2)*x","",1.27401,0
+"Halton box","(x^2+y^2)*x","",1.27401,0

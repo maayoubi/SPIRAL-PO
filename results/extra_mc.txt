@@ -1,0 +1,27 @@
+Selection rates over 20 noise realizations (2% noise), Bonferroni alpha = 0.05
+case        method      eqn  | gyro       cubic*     cross      | mean # selected terms
+nominal     weak        x    | 1.00       1.00       0.00       | 2.20
+nominal     ols_naive   x    | 1.00       1.00       0.55       | 6.50
+nominal     ols_spaced  x    | 0.35       1.00       0.05       | 2.00
+nominal     weak        y    | 0.90       1.00       0.05       | 2.15
+nominal     ols_naive   y    | 1.00       1.00       0.00       | 6.00
+nominal     ols_spaced  y    | 0.00       1.00       0.00       | 2.30
+no_duffing  weak        x    | 0.15       0.00       0.00       | 0.15
+no_duffing  ols_naive   x    | 1.00       1.00       1.00       | 7.80
+no_duffing  ols_spaced  x    | 0.25       0.30       0.05       | 1.20
+no_duffing  weak        y    | 0.00       0.00       0.00       | 0.00
+no_duffing  ols_naive   y    | 0.65       1.00       1.00       | 6.50
+no_duffing  ols_spaced  y    | 0.00       0.10       0.10       | 0.90
+no_gyro     weak        x    | 0.00       1.00       0.00       | 1.20
+no_gyro     ols_naive   x    | 1.00       1.00       0.00       | 6.30
+no_gyro     ols_spaced  x    | 0.30       1.00       0.00       | 1.70
+no_gyro     weak        y    | 0.00       1.00       0.05       | 1.05
+no_gyro     ols_naive   y    | 1.00       1.00       0.25       | 5.90
+no_gyro     ols_spaced  y    | 0.00       1.00       0.00       | 2.30
+nominal     gated       x    | 1.00       1.00       1.00       | 6.20
+nominal     gated       y    | 0.10       0.00       0.80       | 4.70
+no_duffing  gated       x    | 0.60       0.00       0.70       | 2.80
+no_duffing  gated       y    | 0.20       0.20       0.60       | 1.80
+no_gyro     gated       x    | 1.00       1.00       0.60       | 5.90
+no_gyro     gated       y    | 0.00       0.00       0.70       | 4.60
+(* cubic = the isotropic term (x^2+y^2)x / (x^2+y^2)y)
