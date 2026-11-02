@@ -314,7 +314,7 @@ interpolation).
 If you use this code, please cite the paper above and the code archive:
 
 > M. A. Ayoubi and S. Piramoon, *SPIRAL-PO code*, Zenodo (2026).
-> https://doi.org/10.5281/zenodo.23705395
+> https://doi.org/10.5281/zenodo.23875336
 
 A BibTeX entry for the paper will be added when it is published.
 
