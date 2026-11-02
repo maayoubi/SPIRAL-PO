@@ -114,11 +114,11 @@ Xi_full = [x, y, xdot, ydot, Omega];
 
 %% --- physics seed (or none) ---
 theta_full = cumtrapz(t, Omega);
-seed_cols = [Omega.^2.*cos(theta_full), Omega.^2.*sin(theta_full), -xdot_t, -x_t];
+seed_cols = [Omega.^2.*cos(theta_full) + Omegadot.*sin(theta_full), Omega.^2.*sin(theta_full) - Omegadot.*cos(theta_full), -xdot_t, -x_t];
 seed_names = {'unb_cos','unb_sin','-self_dot','-self'};
 if o.use_seed
-    seed = fit_seed(t(idx_tr), x_t(idx_tr), xdot_t(idx_tr), xddot_t(idx_tr), Omega(idx_tr));
-    xddot_seed_full = seed.predict(t, x_t, xdot_t, Omega, theta_full);
+    seed = fit_seed(t(idx_tr), x_t(idx_tr), xdot_t(idx_tr), xddot_t(idx_tr), Omega(idx_tr), Omegadot(idx_tr));
+    xddot_seed_full = seed.predict(t, x_t, xdot_t, Omega, Omegadot, theta_full);
     say('[seed, %s-eq] R2adj = %.5f\n', upper(eqn), seed.R2adj);
 else
     seed = struct('coeffs', zeros(4,1), 'R2adj', 0);
@@ -288,7 +288,7 @@ function [Phi, names] = library_eval(x,y,xd,yd,Om,Omd,th,eqn,use_seed)
 [Phi, names] = build_library(x,y,xd,yd,Om,Omd,eqn);
 if ~use_seed
     if strcmpi(eqn,'x'), s = x; sd = xd; else, s = y; sd = yd; end
-    Phi = [Phi, Om.^2.*cos(th), Om.^2.*sin(th), -sd, -s];
+    Phi = [Phi, Om.^2.*cos(th) + Omd.*sin(th), Om.^2.*sin(th) - Omd.*cos(th), -sd, -s];
     names = [names, {'unb_cos','unb_sin','-self_dot','-self'}];
 end
 end
@@ -514,15 +514,16 @@ x = (lo+hi)/2;
 end
 
 %% ---------------- helpers (seed, Gate 1, Halton, scaling) ----------------
-function seed = fit_seed(t, x, xdot, xddot, Omega)
+function seed = fit_seed(t, x, xdot, xddot, Omega, Omegadot)
 % Physics seed fitted by OLS on the training split:
-%   sdd = a1 Omega^2 cos(theta) + a2 Omega^2 sin(theta) - (c/m) sd - (k/m) s,
+%   sdd = a1 (Omega^2 cos(theta) + Omegadot sin(theta))
+%       + a2 (Omega^2 sin(theta) - Omegadot cos(theta)) - (c/m) sd - (k/m) s,
 % theta = int Omega dt. Returns coeffs [a1; a2; c/m; k/m], se, R2adj and a
-% predict(t, s, sd, Omega, theta) handle.
+% predict(t, s, sd, Omega, Omegadot, theta) handle.
 
 theta = cumtrapz(t, Omega);   % accumulated phase [rad]
 
-Phi = [Omega.^2 .* cos(theta), Omega.^2 .* sin(theta), -xdot, -x];
+Phi = [Omega.^2.*cos(theta) + Omegadot.*sin(theta), Omega.^2.*sin(theta) - Omegadot.*cos(theta), -xdot, -x];
 y   = xddot;
 
 [coeffs, se, ~, R2adj] = ols_fit(Phi, y);
@@ -531,8 +532,8 @@ seed.coeffs  = coeffs;
 seed.se      = se;
 seed.theta   = theta;
 seed.R2adj   = R2adj;
-seed.predict = @(tt, xx, xxdot, OOm, th) ...
-    [OOm.^2.*cos(th), OOm.^2.*sin(th), -xxdot, -xx] * coeffs;
+seed.predict = @(tt, xx, xxdot, OOm, OOmd, th) ...
+    [OOm.^2.*cos(th) + OOmd.*sin(th), OOm.^2.*sin(th) - OOmd.*cos(th), -xxdot, -xx] * coeffs;
 
 end
 

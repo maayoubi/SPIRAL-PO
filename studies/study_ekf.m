@@ -27,7 +27,7 @@ cfg = spiral_config('nominal', 77);
 cfg.params.phi0 = cfg.params.phi0 + 0.7;          % independent record
 D = simulate_rotor(cfg);                          % D.traj = true state (hidden)
 
-[z, ~] = ekf_4dof(D.t, D.x, D.y, D.params, D.Omega_fun, D.theta_fun, 'Q_scale', 1e-3);
+[z, ~] = ekf_4dof(D.t, D.x, D.y, D.params, D.Omega_fun, D.theta_fun, 'Q_scale', 1e-4);
 
 names = {'x','y','\alpha','\beta'};
 units = {'m','m','rad','rad'};
@@ -49,7 +49,7 @@ fclose(fid);
 % ---------------- figure: full record (left) and zoom (right) ----------------
 blue = [0.13 0.27 0.60]; red = [0.80 0.15 0.15];
 ylab = {'x [mm]', 'y [mm]', '\alpha [mrad]', '\beta [mrad]'};
-zoom = D.t >= 4.0 & D.t <= 4.3;
+zoom = D.t >= 9.0 & D.t <= 10.0;
 fig = figure('Units', 'centimeters', 'Position', [2 2 18 16], 'Color', 'w');
 for k = 1:4
     tr = 1e3*D.traj(:,k); es = 1e3*z(:,k);
@@ -62,7 +62,7 @@ for k = 1:4
     subplot(4, 2, 2*k);
     plot(D.t(zoom), tr(zoom), '-', 'Color', blue, 'LineWidth', 1.0); hold on
     plot(D.t(zoom), es(zoom), '--', 'Color', red, 'LineWidth', 1.0);
-    xlim([4.0 4.3]); box on
+    xlim([9.0 10.0]); box on
     if k == 4, xlabel('time [s]'); end
 end
 set(findall(fig, '-property', 'FontSize'), 'FontSize', 9);
@@ -73,22 +73,23 @@ end
 % ========================================================================
 function ekf_robustness(RES)
 % Parameter-mismatch and noise sweeps on an independent record.
-    p0 = base_params();              % true, data-generating parameters
+    cfg0 = spiral_config('nominal', 77);
+    cfg0.params.phi0 = cfg0.params.phi0 + 0.7;     % independent record
+    Dt = simulate_rotor(cfg0);                     % true trajectory
+    tt = Dt.t; q_true = Dt.traj(:,1:4);
+    p0 = Dt.params;
     mismatch_levels = [0.00 0.05 0.10 0.20];
     noise_levels    = [0.02 0.05 0.10 0.20];
-    % independent record (noise seed 77, phase +0.7 rad)
-    val_seed   = 20260624;           % NOT the seed used for model discovery
-    p0.phi0    = p0.phi0 + 0.7;      % different unbalance phase than discovery
+    val_seed = 20260624;
     % ---------- Study 1: parameter mismatch (noise fixed at 2%) ----------
     fprintf('\n%% ---- Table tab:ekf_mismatch (noise = 2%%) ----\n');
     R1 = zeros(numel(mismatch_levels),6);
     for i = 1:numel(mismatch_levels)
         d = mismatch_levels(i);
-        [tt,q_true]  = simulate_truth(p0, 0.02, val_seed);   % truth + 2% noise obs
-        yobs         = q_true(:,1:2) + meas_noise(q_true(:,1:2), 0.02, val_seed+1);
-        p_ekf        = perturb_bearings(p0, d);              % mismatched filter model
-        zhat         = run_ekf(tt, yobs, p_ekf);
-        R1(i,:)      = metrics_row(q_true, zhat);
+        yobs  = q_true(:,1:2) + meas_noise(q_true(:,1:2), 0.02, val_seed+1);
+        p_ekf = perturb_bearings(p0, d);                     % mismatched filter model
+        zhat  = run_ekf(tt, yobs, p_ekf, Dt);
+        R1(i,:) = metrics_row(q_true, zhat);
         emit_row(sprintf('$%g\\%%$', 100*d), R1(i,:), false);
     end
     % ---------- Study 2: noise sweep (parameters matched) ----------
@@ -96,11 +97,10 @@ function ekf_robustness(RES)
     R2 = zeros(numel(noise_levels),6);
     for i = 1:numel(noise_levels)
         s = noise_levels(i);
-        [tt,q_true]  = simulate_truth(p0, s, val_seed);
-        yobs         = q_true(:,1:2) + meas_noise(q_true(:,1:2), s, val_seed+1);
-        zhat         = run_ekf(tt, yobs, p0);               % matched model
-        R2(i,:)      = metrics_row(q_true, zhat);
-        win          = stable_window(tt, q_true, zhat);     % seconds before divergence
+        yobs = q_true(:,1:2) + meas_noise(q_true(:,1:2), s, val_seed+1);
+        zhat = run_ekf(tt, yobs, p0, Dt);                    % matched model
+        R2(i,:) = metrics_row(q_true, zhat);
+        win = stable_window(tt, q_true, zhat);
         emit_row(sprintf('$%g\\%%$', 100*s), R2(i,1:4), true, win);
     end
     save(fullfile(RES,'ekf_robustness_results.mat'),'R1','R2','mismatch_levels','noise_levels');
@@ -109,77 +109,20 @@ function ekf_robustness(RES)
     fprintf('\nSaved ekf_robustness_results.mat and CSVs.\n');
 end
 
-function [tt, q_true] = simulate_truth(p, noise_std_frac, seed) %#ok<INUSD>
-% Integrate the full 4-DOF rotor and return the TRUE (clean) states.
-%   tt     : (N x 1) time vector
-%   q_true : (N x 4) true states [x y alpha beta]  (noise added by caller)
-    set_seed(seed);
-    params = ekf_params_from(p);
-    [Omega_fun, theta_fun] = speed_schedule(p);
-    tt = (0:p.dt:p.T_end).';
-    N  = numel(tt);
-    z    = zeros(8,1);                 % [x y alpha beta xd yd ad bd]
-    traj = zeros(N,8);  traj(1,:) = z.';
-    dt = p.dt;
-    for i = 1:N-1
-        ti = tt(i);
-        k1 = rotor_rhs(ti,        z,           params, Omega_fun, theta_fun);
-        k2 = rotor_rhs(ti+dt/2,   z+dt/2*k1,   params, Omega_fun, theta_fun);
-        k3 = rotor_rhs(ti+dt/2,   z+dt/2*k2,   params, Omega_fun, theta_fun);
-        k4 = rotor_rhs(ti+dt,     z+dt*k3,     params, Omega_fun, theta_fun);
-        z  = z + dt/6*(k1+2*k2+2*k3+k4);
-        traj(i+1,:) = z.';
-    end
-    q_true = traj(:,1:4);
-end
-% =========================================================================
-function zhat = run_ekf(tt, yobs, p_ekf)
-% Run the 8-state EKF on (x,y) observations with filter model p_ekf.
-%   zhat : (N x 8) estimate [x y alpha beta xd yd ad bd]
-    params = ekf_params_from(p_ekf);
-    [Omega_fun, theta_fun] = speed_schedule(p_ekf);
-    [z_est, ~] = ekf_4dof(tt, yobs(:,1), yobs(:,2), params, ...
-                          Omega_fun, theta_fun, 'Q_scale', 1e-3);
+function zhat = run_ekf(tt, yobs, p_ekf, Dt)
+% 8-state EKF on (x, y) observations with filter model p_ekf.
+    [z_est, ~] = ekf_4dof(tt, yobs(:,1), yobs(:,2), p_ekf, ...
+                          Dt.Omega_fun, Dt.theta_fun, 'Q_scale', 1e-4);
     zhat = z_est;
 end
-% =========================================================================
-function params = ekf_params_from(p)
-% Map the scalar-bearing base_params struct onto the per-bearing struct that
-% rotor_rhs.m / ekf_4dof expect.
-    xib = 1 - p.xi;
-    L1 = [ xib, 0,   0,             p.xi*xib*p.L ;
-           0,   xib, -p.xi*xib*p.L, 0            ];
-    L2 = [ p.xi, 0,    0,            -p.xi*xib*p.L ;
-           0,    p.xi, p.xi*xib*p.L, 0             ];
-    params.m   = p.m;   params.Id = p.Id;  params.Ip = p.Ip;
-    params.kL1 = p.kL;  params.kL2  = p.kL;
-    params.kNL1= p.kNL; params.kNL2 = p.kNL;
-    params.cb1 = p.cb;  params.cb2  = p.cb;
-    params.e   = p.e;   params.phi0 = p.phi0;
-    params.L1  = L1;    params.L2   = L2;
-end
-function [Omega_fun, theta_fun] = speed_schedule(p)
-% Prescribed run-down schedule 60 Hz -> 5 Hz over T_end (as spiral_config).
-    f0 = 60; f1 = 5; Tend = p.T_end; decel = (f0-f1)/Tend;
-    Omega_fun = @(tt) 2*pi*max(f1, f0 - decel*tt);
-    theta_fun = @(tt) 2*pi*(f0.*tt - 0.5*decel.*min(tt,Tend).^2);
-end
-% =========================================================================
-% Parameters and perturbation
-% =========================================================================
-function p = base_params()
-    p.m   = 1.0;            p.R = 0.05;
-    p.Ip  = 0.5*p.m*p.R^2;  p.Id = 0.5*p.Ip;
-    p.a   = 0.3;            p.L = 1.0;   p.xi = p.a/p.L;
-    p.kL  = 1000;           p.kNL = 5e6; p.cb = 1.4;   % bearing params (perturbed)
-    p.e   = 0.01;           p.phi0 = 0.4;
-    p.dt  = 5e-4;           p.T_end = 8.0;             % 60 -> 5 Hz run-down
-end
+
 function p = perturb_bearings(p, delta)
-% Joint relative mismatch applied to the filter's bearing model.
-    p.kL  = p.kL  * (1 + delta);
-    p.kNL = p.kNL * (1 + delta);
-    p.cb  = p.cb  * (1 + delta);
+% Joint relative mismatch of the filter's bearing model (stiffness, cubic
+% stiffness, cross-axis stiffness and damping).
+    p.kL1 = p.kL1*(1+delta); p.kL2 = p.kL2*(1+delta);
+    p.kxy = p.kxy*(1+delta); p.kyx = p.kyx*(1+delta);
+    p.kNL1 = p.kNL1*(1+delta); p.kNL2 = p.kNL2*(1+delta);
+    p.cb1 = p.cb1*(1+delta); p.cb2 = p.cb2*(1+delta);
 end
 % =========================================================================
 % Noise, metrics, helpers
@@ -236,22 +179,22 @@ function [z_est, P_diag] = ekf_4dof(t, x_meas, y_meas, params, Omega_fun, theta_
 % Extended Kalman filter for the 8-state rotor z = [x y alpha beta xd yd
 % alphad betad] with the full nonlinear 4-DOF model (rotor_rhs.m) as the
 % process model and {x, y} as the only measurement (Sect. 4.12, Table 8).
-%   mean: RK4 propagation; covariance: Psi = I + dt F + dt^2 F^2 / 2 with a
-%   finite-difference Jacobian F; Q = Q_scale diag(1e-2*ones(4), ones(4));
-%   R estimated from the second differences of x, y unless 'R_meas' is
-%   given; P0 = diag(1e-6,1e-6, P0s,P0s, 1e-4,1e-4, 10 P0s,10 P0s).
-% Options: 'Q_scale' (1e-3), 'R_meas' ([]), 'z0' ([x1 y1 0...0]), 'P0_scale' (1e-4)
+%   mean: RK4 propagation; covariance: Phi = expm(dt F) with a
+%   finite-difference Jacobian F. State scales s from the measured response
+%   (std of x, y; tilts over a unit span; rates times the highest spin
+%   speed): P0 = diag(s.^2), Q = Q_scale diag(s.^2). R estimated from the
+%   second differences of x, y unless 'R_meas' is given.
+% Options: 'Q_scale' (1e-4), 'R_meas' ([]), 'z0' ([x1 y1 0...0])
 p = inputParser;
-p.addParameter('Q_scale', 1e-3);
+p.addParameter('Q_scale', 1e-4);
 p.addParameter('R_meas', []);
 p.addParameter('z0', []);
-p.addParameter('P0_scale', 1e-4);
 p.parse(varargin{:});
 o = p.Results;
 
 N = numel(t);
 dt = t(2) - t(1);
-% the filter uses the plain 4-DOF model (extended-model fields removed)
+% the filter uses the 4-DOF model without hysteresis states
 params = strip_extended(params);
 
 if isempty(o.R_meas)
@@ -273,10 +216,12 @@ else
     z0 = o.z0;
 end
 
-% process noise: larger on the velocity states
-Q = o.Q_scale * diag([1e-2,1e-2,1e-2,1e-2, 1,1,1,1]);
-
-P0 = diag([1e-6,1e-6, o.P0_scale,o.P0_scale, 1e-4,1e-4, o.P0_scale*10,o.P0_scale*10]);
+% state scales from the measured response: displacements, tilts (over a
+% unit span) and their rates at the highest spin speed
+sx = std(x_meas); sy = std(y_meas); w = max(abs(Omega_fun(t(:))));
+sc = [sx sy sx sy w*sx w*sy w*sx w*sy].^2;
+P0 = diag(sc);
+Q  = o.Q_scale * diag(sc);
 
 H = zeros(2,8); H(1,1)=1; H(2,2)=1;
 
@@ -297,7 +242,7 @@ for k = 1:N-1
     z_pred = z + dt/6*(k1+2*k2+2*k3+k4);
 
     Fjac = numerical_jacobian_local(f, tk, z);
-    Phi = eye(8) + dt*Fjac + 0.5*dt^2*(Fjac*Fjac);   % 2nd-order discretization
+    Phi = expm(dt*Fjac);                     % discretized linearization
     P_pred = Phi*P*Phi' + Q;
 
     % --- update ---
@@ -328,9 +273,7 @@ end
 end
 
 function P = strip_extended(P)
-for f = {'aniso','gyro_scale','bw'}
-    if isfield(P, f{1}), P = rmfield(P, f{1}); end
-end
+if isfield(P, 'bw'), P.bw.on = false; end
 end
 
 function d = result_dir()

@@ -47,12 +47,12 @@ end
 % -------------------------------------------------------------------------
 function quick_check()
 % Nominal record, weak-form identification.
-fprintf('Simulating the nominal benchmark (8 s, 60 -> 5 Hz) ...\n');
+fprintf('Simulating the nominal benchmark (15 s, 40 -> 0 Hz) ...\n');
 D = simulate_rotor(spiral_config('nominal', 31));
 for e = {'x','y'}
     W = weak_form(D, e{1});
     fprintf('  %s-equation: selected %s  (|t| > %.2f, %d test functions)\n', ...
         e{1}, strjoin(W.selected, ', '), W.crit, W.n_eq);
 end
-fprintf('Expected: x: Omega*ydot, (x^2+y^2)*x   y: Omega*xdot, (x^2+y^2)*y\n');
+fprintf('Expected: x: Omega*ydot, y, (x^2+y^2)*x   y: Omega*xdot, x, (x^2+y^2)*y\n');
 end

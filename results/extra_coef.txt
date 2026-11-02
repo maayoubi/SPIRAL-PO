@@ -1,29 +1,31 @@
 Weak-form model, nominal benchmark (noise seed 31)
-  x-equation: selected Omega*ydot, (x^2+y^2)*x
-     unb_cos      weak coeff +7.9846e-03  SE  1.16e-05  t   690.3 | trajectory OLS +7.6835e-03  block-bootstrap SE  2.84e-05
-     unb_sin      weak coeff -5.9966e-03  SE  1.25e-05  t  -479.0 | trajectory OLS -5.6416e-03  block-bootstrap SE  5.12e-05
-     -self_dot    weak coeff +6.9778e-01  SE  8.14e-02  t     8.6 | trajectory OLS +1.7894e+00  block-bootstrap SE  6.66e-01
-     -self        weak coeff +4.9849e+02  SE  7.77e+00  t    64.1 | trajectory OLS +7.8953e+02  block-bootstrap SE  4.05e+01
-     Omega*ydot   weak coeff -1.2545e-03  SE  2.23e-04  t    -5.6 | trajectory OLS -3.0361e-03  block-bootstrap SE  1.03e-03
-     (x^2+y^2)*x  weak coeff -6.2769e+05  SE  3.20e+03  t  -195.9 | trajectory OLS -5.1926e+05  block-bootstrap SE  1.70e+04
-  y-equation: selected Omega*xdot, (x^2+y^2)*y
-     unb_cos      weak coeff +5.9999e-03  SE  1.05e-05  t   570.6 | trajectory OLS +5.6321e-03  block-bootstrap SE  5.04e-05
-     unb_sin      weak coeff +8.0064e-03  SE  1.06e-05  t   757.9 | trajectory OLS +7.6793e-03  block-bootstrap SE  2.29e-05
-     -self_dot    weak coeff +7.9451e-01  SE  6.43e-02  t    12.4 | trajectory OLS +1.7610e+00  block-bootstrap SE  4.41e-01
-     -self        weak coeff +4.8836e+02  SE  5.27e+00  t    92.6 | trajectory OLS +7.0611e+02  block-bootstrap SE  3.29e+01
-     Omega*xdot   weak coeff +1.7469e-03  SE  2.53e-04  t     6.9 | trajectory OLS +5.2828e-03  block-bootstrap SE  1.83e-03
-     (x^2+y^2)*y  weak coeff -6.2722e+05  SE  1.86e+03  t  -336.6 | trajectory OLS -5.6240e+05  block-bootstrap SE  1.18e+04
+  x-equation: selected Omega*ydot, y, (x^2+y^2)*x
+     unb_cos      weak coeff -1.3726e-05  SE  2.04e-08  t  -672.8 | trajectory OLS -1.3163e-05  block-bootstrap SE  3.04e-08
+     unb_sin      weak coeff +7.3995e-06  SE  1.87e-08  t   395.3 | trajectory OLS +7.1108e-06  block-bootstrap SE  2.80e-08
+     -self_dot    weak coeff +3.4653e+00  SE  3.34e-02  t   103.7 | trajectory OLS +3.3806e+00  block-bootstrap SE  6.09e-02
+     -self        weak coeff +8.0641e+03  SE  8.19e+00  t   984.6 | trajectory OLS +8.1765e+03  block-bootstrap SE  2.05e+01
+     Omega*ydot   weak coeff -5.3699e-03  SE  3.92e-04  t   -13.7 | trajectory OLS -6.6730e-03  block-bootstrap SE  8.51e-04
+     y            weak coeff -1.1024e+03  SE  3.93e+00  t  -280.5 | trajectory OLS -1.1089e+03  block-bootstrap SE  6.96e+00
+     (x^2+y^2)*x  weak coeff -3.3840e+10  SE  1.83e+08  t  -184.7 | trajectory OLS -3.1133e+10  block-bootstrap SE  4.03e+08
+  y-equation: selected Omega*xdot, x, (x^2+y^2)*y
+     unb_cos      weak coeff -7.4096e-06  SE  1.76e-08  t  -421.9 | trajectory OLS -7.0923e-06  block-bootstrap SE  2.24e-08
+     unb_sin      weak coeff -1.3773e-05  SE  1.79e-08  t  -771.5 | trajectory OLS -1.3228e-05  block-bootstrap SE  3.07e-08
+     -self_dot    weak coeff +2.0620e+00  SE  3.51e-02  t    58.8 | trajectory OLS +1.9632e+00  block-bootstrap SE  5.79e-02
+     -self        weak coeff +9.6445e+03  SE  7.65e+00  t  1260.2 | trajectory OLS +9.7549e+03  block-bootstrap SE  1.89e+01
+     Omega*xdot   weak coeff +4.1466e-03  SE  3.26e-04  t    12.7 | trajectory OLS +3.9391e-03  block-bootstrap SE  5.79e-04
+     x            weak coeff -1.0990e+03  SE  2.92e+00  t  -376.7 | trajectory OLS -1.0940e+03  block-bootstrap SE  6.24e+00
+     (x^2+y^2)*y  weak coeff -3.3793e+10  SE  1.90e+08  t  -177.6 | trajectory OLS -3.0868e+10  block-bootstrap SE  4.70e+08
 
 Residual predictability after the weak-form model (held-out NN R^2, one-sided p)
-  nominal    x-eq: seed only R2 =  0.266 (p = 0.0165); seed + selected R2 =  0.210 (p = 0.13)
-  nominal    y-eq: seed only R2 =  0.165 (p = 0.00108); seed + selected R2 =  0.150 (p = 0.0765)
-  no_duffing x-eq: seed only R2 =  0.014 (p = 0.0601); seed + selected R2 =  0.065 (p = 0.105)
-  no_duffing y-eq: seed only R2 =  0.007 (p = 0.172); seed + selected R2 =  0.063 (p = 0.103)
-  no_gyro    x-eq: seed only R2 =  0.248 (p = 0.0182); seed + selected R2 =  0.191 (p = 0.146)
-  no_gyro    y-eq: seed only R2 =  0.113 (p = 0.00582); seed + selected R2 =  0.152 (p = 0.0768)
-  aniso      x-eq: seed only R2 =  0.135 (p = 0.000119); seed + selected R2 =  0.131 (p = 0.0645)
-  aniso      y-eq: seed only R2 =  0.228 (p = 0.00332); seed + selected R2 =  0.205 (p = 0.0951)
-  hysteresis x-eq: seed only R2 =  0.129 (p = 0.0029); seed + selected R2 =  0.442 (p = 0.0695)
-  hysteresis y-eq: seed only R2 =  0.136 (p = 0.0199); seed + selected R2 =  0.321 (p = 0.0806)
-  params     x-eq: seed only R2 =  0.232 (p = 0.014); seed + selected R2 =  0.129 (p = 0.171)
-  params     y-eq: seed only R2 =  0.152 (p = 0.00475); seed + selected R2 =  0.124 (p = 0.0841)
+  nominal    x-eq: seed only R2 =  0.593 (p = 0.0341); seed + selected R2 =  0.050 (p = 0.0435)
+  nominal    y-eq: seed only R2 =  0.690 (p = 0.0238); seed + selected R2 =  0.068 (p = 0.0609)
+  no_duffing x-eq: seed only R2 =  0.419 (p = 0.0287); seed + selected R2 =  0.039 (p = 0.0607)
+  no_duffing y-eq: seed only R2 =  0.471 (p = 0.0424); seed + selected R2 =  0.042 (p = 0.0571)
+  no_gyro    x-eq: seed only R2 =  0.592 (p = 0.0336); seed + selected R2 =  0.052 (p = 0.0393)
+  no_gyro    y-eq: seed only R2 =  0.689 (p = 0.0253); seed + selected R2 =  0.069 (p = 0.0643)
+  aniso      x-eq: seed only R2 =  0.586 (p = 0.0121); seed + selected R2 =  0.068 (p = 0.0577)
+  aniso      y-eq: seed only R2 =  0.744 (p = 0.0191); seed + selected R2 =  0.063 (p = 0.0903)
+  hysteresis x-eq: seed only R2 =  0.560 (p = 0.0244); seed + selected R2 =  0.048 (p = 0.0481)
+  hysteresis y-eq: seed only R2 =  0.609 (p = 0.0152); seed + selected R2 =  0.070 (p = 0.0736)
+  params     x-eq: seed only R2 =  0.471 (p = 0.0255); seed + selected R2 =  0.049 (p = 0.0379)
+  params     y-eq: seed only R2 =  0.577 (p = 0.0321); seed + selected R2 =  0.065 (p = 0.0649)

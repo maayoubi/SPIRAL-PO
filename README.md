@@ -31,8 +31,8 @@ spiral_po_run              % everything (several hours); results go to results/
 The quick check should print:
 
 ```
-x-equation: selected Omega*ydot, (x^2+y^2)*x  (|t| > 2.73, 158 test functions)
-y-equation: selected Omega*xdot, (x^2+y^2)*y  (|t| > 2.73, 158 test functions)
+x-equation: selected Omega*ydot, y, (x^2+y^2)*x  (|t| > 2.73, 294 test functions)
+y-equation: selected Omega*xdot, x, (x^2+y^2)*y  (|t| > 2.73, 294 test functions)
 ```
 
 To use the functions interactively, add the folders to the path first with
@@ -173,7 +173,8 @@ A single-channel rig record (`study_rig`) has `t`, `x` (the channel), `xd`,
 
 For the x-equation (the y-equation is obtained by exchanging x and y):
 
-* seed, always fitted: `Omega^2 cos(theta)`, `Omega^2 sin(theta)`, `-xd`, `-x`,
+* seed, always fitted: `Omega^2 cos(theta) + Omegadot sin(theta)`,
+  `Omega^2 sin(theta) - Omegadot cos(theta)` (unbalance force), `-xd`, `-x`,
   with `theta = ∫ Omega dt`;
 * candidates: `Omega*ydot` (gyroscopic), `y` (cross-channel),
   `(x^2+y^2)*x` (isotropic cubic), and the competing forms `(x^2+y^2)*xdot`,
@@ -182,8 +183,8 @@ For the x-equation (the y-equation is obtained by exchanging x and y):
 ### 4.4 Identification (`weak_form.m`)
 
 The acceleration equation is multiplied by the test functions
-`psi_m = (1 - tau^2)^4` (half-width h = 25 ms, disjoint supports; about 160 of
-them on the 8 s record) and integrated. Integration by parts moves the
+`psi_m = (1 - tau^2)^4` (half-width h = 25 ms, disjoint supports; about 290 of
+them on the 15 s record) and integrated. Integration by parts moves the
 derivatives onto `psi`, so the acceleration is never differentiated numerically:
 
 ```
@@ -208,8 +209,9 @@ Table 3).
 
 ### 4.5 Diagnostics (`diagnostics.m`)
 
-* `'heldout'`: seed and closure are refitted on the identification record and
-  applied unchanged to an independent record (noise seed 77, unbalance phase
+* `'heldout'`: seed and closure are fitted on the identification record and
+  applied to an independent record, with only the unbalance amplitude and
+  phase refitted there (noise seed 77, unbalance phase
   +0.7 rad). The gain is the share of the held-out post-seed residual that the
   closure explains.
 * `'predict'`: 10 ms and 50 ms predictions of x and y from the measured state.
@@ -259,14 +261,14 @@ interpolation).
 
 | Setting | Value | Where |
 |---|---|---|
-| Benchmark | m = 1 kg, kL = 1000 N/m, kNL = 5e6 N/m^3, cb = 1.4 N s/m per bearing, a/L = 0.3, e = 0.01 m, phi0 = 0.4 rad | `spiral_config.m` |
-| Record | 8 s, 60 -> 5 Hz linear coast-down, RK4 at dt = 5e-4 s, 2 % noise | `spiral_config.m` |
+| Benchmark | m = 1.15 kg, R = 0.0735 m disk, a/L = 0.25; per bearing K_b = [18596 2542; 2542 22246] N/m, C_b = [8 0.16; 0.16 4.8] N s/m, kNL = 3.12e11 N/m^3; U = 1.8e-5 kg m, phi0 = 0.4 rad | `spiral_config.m` |
+| Record | 15 s, 40 -> 0 Hz linear coast-down, RK4 output at 1 ms (4 substeps), 2 % noise | `spiral_config.m` |
 | Noise seeds | 31, 41, 51 (identification); 101-120 (Monte Carlo); 201-205 (noise sweep); 77 + phase 0.7 rad (independent record) | `study_synthetic.m` |
 | SG derivatives | order 4, window from {21, 31, 51} by hold-out CV | `sg_derivative.m` |
 | Weak form | h = 0.025 s, psi = (1 - tau^2)^4, alpha = 0.05 Bonferroni | `weak_form.m` |
 | Block bootstrap | B = 1000, block length 4 SG windows, seed 1 | `regression_baselines.m` |
 | HAVOK | 50 delays per channel, stride 2 ms, rank 15 | `havok_baseline.m` |
-| EKF | Q_scale = 1e-3, R from second differences | `study_ekf.m` |
+| EKF | P0 and Q = 1e-4 P0 scaled to the measured response, covariance by expm(dt F), R from second differences | `study_ekf.m` |
 | Rig, simultaneous | 1 kHz, tracked speed > 3 Hz (5.45 s), SG windows {11,21,31}, STFT 512 samples | `study_rig.m` |
 | Rig, single-sensor | 4 kHz -> 2 kHz, 1-24 s, K = 4 candidates | `study_rig.m` |
 
@@ -274,12 +276,12 @@ interpolation).
 
 | Quantity | Value |
 |---|---|
-| Weak form, nominal, x | Omega*ydot (t = -7.9), (x^2+y^2)x (t = -216) |
-| Weak form, nominal, y | Omega*xdot (t = 3.5), (x^2+y^2)y (t = -284) |
-| Held-out gain, weak form | 1.84 % (x), 1.42 % (y) |
-| Conditioning, full library | kappa = 35 / 25, mu_Phi = 0.004 / 0.008 |
-| Library capacity, nominal | R^2 = 0.41 (x), 0.65 (y) |
-| EKF, independent record | alpha 1.41 %, beta 1.62 % relative RMSE |
+| Weak form, nominal, x | Omega*ydot (t = -13.7), y (t = -281), (x^2+y^2)x (t = -185) |
+| Weak form, nominal, y | Omega*xdot (t = 12.7), x (t = -377), (x^2+y^2)y (t = -178) |
+| Held-out gain, weak form | 40.6 % (x), 55.7 % (y) |
+| Conditioning, full library | kappa = 113 / 108, mu_Phi = 3.4e-4 / 3.8e-4 |
+| Library capacity, nominal | R^2 = 0.63 (x), 0.76 (y) |
+| EKF, independent record | alpha 1.28 %, beta 1.22 % relative RMSE |
 | Rig, simultaneous record | Omega^2*x (t = -12.1), Omega^2*y (t = -6.5) only; 9/9 settings |
 | Rig, single-sensor fit on X | Omega^2 s (t = -9.07), Omegadot s (t = 3.48); held-out gain on Y 14.2 % |
 
@@ -309,8 +311,12 @@ interpolation).
 
 ## 9. How to cite
 
-If you use this code, please cite the paper above. A BibTeX entry will be
-added when the paper is published.
+If you use this code, please cite the paper above and the code archive:
+
+> M. A. Ayoubi and S. Piramoon, *SPIRAL-PO code*, Zenodo (2026).
+> https://doi.org/10.5281/zenodo.23705395
+
+A BibTeX entry for the paper will be added when it is published.
 
 ## 10. License
 

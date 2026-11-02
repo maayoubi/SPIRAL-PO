@@ -458,7 +458,7 @@ end
 % ========================================================================
 function [S, L] = columns(D)
 th = cumtrapz(D.t, D.Omega);
-S = [D.Omega.^2.*cos(th), D.Omega.^2.*sin(th), -D.xd, -D.x];
+S = [D.Omega.^2.*cos(th) + D.Omegadot.*sin(th), D.Omega.^2.*sin(th) - D.Omegadot.*cos(th), -D.xd, -D.x];
 L = [D.x.^3, D.x.^2.*D.xd, D.Omega.^2.*D.x, D.Omegadot.*D.x];
 end
 

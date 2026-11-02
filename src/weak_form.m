@@ -126,7 +126,7 @@ end
 function W = single_channel(D, o)
 % Single-channel record s(t) = D.x: seed + {s^3, s^2*sd, Omega^2*s, Omegadot*s}.
 th = cumtrapz(D.t, D.Omega);
-S = [D.Omega.^2.*cos(th), D.Omega.^2.*sin(th), -D.xd, -D.x];
+S = [D.Omega.^2.*cos(th) + D.Omegadot.*sin(th), D.Omega.^2.*sin(th) - D.Omegadot.*cos(th), -D.xd, -D.x];
 L = [D.x.^3, D.x.^2.*D.xd, D.Omega.^2.*D.x, D.Omegadot.*D.x];
 names = {'s^3','s^2*sdot','Omega^2*s','Omegadot*s'};
 dt = D.t(2)-D.t(1); nh = round(o.h/dt);

@@ -1,5 +1,5 @@
 pipeline,eqn,terms,closure_R2adj,heldout_gain_pct,true_closure_gain_pct,termination,iterations
-"pointwise","x","x^2*y + (x^2+y^2)*xdot + y + (x^2+y^2)*x + Omega*ydot + Omegadot*x",0.16108,1.96955,1.9873,"Gate 2: nothing admitted",4
-"pointwise","y","y^3 + Omegadot*y + x*y^2 + (x^2+y^2)*ydot",0.240657,0.738633,0.752601,"Gate 2: nothing admitted",3
-"valid","x","(x^2+y^2)*x",0.0593407,1.27401,1.28629,"Gate 2: nothing admitted",2
-"valid","y","",0,0,0,"Gate 2: nothing admitted",1
+"pointwise","x","y + Omegadot*x + (x^2+y^2)*xdot + Omega^2*x + (x^2+y^2)*x + x^2*y + Omega*ydot",0.591029,41.0958,63.116,"Gate 2: nothing admitted",3
+"pointwise","y","x + (x^2+y^2)*y + (x^2+y^2)*ydot + Omega*xdot + x*y^2 + Omega^2*y + Omegadot*y",0.664357,55.703,75.155,"Gate 2: nothing admitted",3
+"valid","x","y",0.35687,40.2344,61.7123,"Gate 2: nothing admitted",2
+"valid","y","x",0.517528,55.3757,74.6598,"Gate 2: nothing admitted",2

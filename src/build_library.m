@@ -18,7 +18,8 @@ function [Phi, names, info] = build_library(varargin)
 %       info.win its SG window.
 %
 % Seed (always fitted): unbalance forcing and linear damping/stiffness,
-%   x-eq:  Omega^2 cos(theta), Omega^2 sin(theta), -xd, -x,
+%   x-eq:  Omega^2 cos(theta) + Omegadot sin(theta),
+%          Omega^2 sin(theta) - Omegadot cos(theta), -xd, -x,
 %   theta = int Omega dt (accumulated spin angle, not Omega*t).
 %
 % Candidates, x-equation (y-equation by exchanging x and y):
@@ -55,7 +56,7 @@ if nargin < 4, closure_names = {}; end
 th = cumtrapz(D.t, D.Omega);
 if strcmpi(eqn,'x'), s = D.x; sd = D.xd; info.target = D.xdd; info.win = D.win_x;
 else,                s = D.y; sd = D.yd; info.target = D.ydd; info.win = D.win_y; end
-S = [D.Omega.^2.*cos(th), D.Omega.^2.*sin(th), -sd, -s];
+S = [D.Omega.^2.*cos(th) + D.Omegadot.*sin(th), D.Omega.^2.*sin(th) - D.Omegadot.*cos(th), -sd, -s];
 seed_names = {'unb_cos','unb_sin','-self_dot','-self'};
 [L, ln] = build_library(D.x, D.y, D.xd, D.yd, D.Omega, D.Omegadot, eqn);
 info.theta = th;

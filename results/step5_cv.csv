@@ -1,6 +1,6 @@
 cv_scheme,x_terms,y_terms,gain_x_pct,gain_y_pct
-"stratified","(x^2+y^2)*x","(x^2+y^2)*y",1.27401,0.400309
-"blocked","(x^2+y^2)*x","",1.27401,0
-"rolling","","",0,0
-"pointwise stats + stratified","x^2*y + (x^2+y^2)*xdot + y + (x^2+y^2)*x + Omega*ydot + Omegadot*x","y^3 + Omegadot*y + x*y^2 + (x^2+y^2)*ydot",1.96955,0.738633
-"pointwise stats + blocked","","",0,0
+"stratified","y + (x^2+y^2)*x + x^2*y","x + (x^2+y^2)*y + x*y^2 + (x^2+y^2)*ydot",40.2344,55.4138
+"blocked","y","x",40.2344,55.3757
+"rolling","y","x",40.2344,55.3757
+"pointwise stats + stratified","y + Omegadot*x + (x^2+y^2)*xdot + Omega^2*x + (x^2+y^2)*x + x^2*y + Omega*ydot","x + (x^2+y^2)*y + (x^2+y^2)*ydot + Omega*xdot + x*y^2 + Omega^2*y + Omegadot*y",41.0958,55.703
+"pointwise stats + blocked","y","x + Omega^2*y",40.2344,55.3532

@@ -3,7 +3,8 @@ function R = diagnostics(what, varargin)
 %
 %   E = diagnostics('heldout', eqn, closure_names, D_fit, D_test)
 %       Out-of-sample check on an independent record. Seed and closure are
-%       refitted jointly on D_fit and applied unchanged to D_test.
+%       fitted jointly on D_fit and applied to D_test with only the
+%       unbalance amplitude and phase refitted.
 %       E.gain_pct      share of the held-out post-seed residual variance
 %                       explained by the closure: 100(1 - mse_full/mse_seed)
 %       E.gain_true_pct the same against the noise-free acceleration
@@ -57,6 +58,10 @@ function E = heldout(eqn, closure_names, D_fit, D_test)
 yf = If.target; yt = It.target; ns = 4;
 b_full = Pf \ yf;
 b_seed = Pf(:,1:ns) \ yf;
+% the unbalance amplitude and phase (columns 1-2) differ between records:
+% refit them on the test record with all other coefficients fixed
+b_full(1:2) = Pt(:,1:2) \ (yt - Pt(:,3:end)*b_full(3:end));
+b_seed(1:2) = Pt(:,1:2) \ (yt - Pt(:,3:ns)*b_seed(3:ns));
 e_full = yt - Pt*b_full;
 e_seed = yt - Pt(:,1:ns)*b_seed;
 E.rmse_seed = sqrt(mean(e_seed.^2));
@@ -108,7 +113,7 @@ end
 
 function a = model_eval(b, names, eqn, x, y, xd, yd, Om, Omd, th)
 if strcmpi(eqn,'x'), s = x; sd = xd; else, s = y; sd = yd; end
-a = [Om.^2.*cos(th), Om.^2.*sin(th), -sd, -s] * b(1:4);
+a = [Om.^2.*cos(th) + Omd.*sin(th), Om.^2.*sin(th) - Omd.*cos(th), -sd, -s] * b(1:4);
 if numel(names) > 4
     [L, ln] = build_library(x, y, xd, yd, Om, Omd, eqn);
     for k = 5:numel(names)

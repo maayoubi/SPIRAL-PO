@@ -63,8 +63,8 @@ say('SPIRAL-PO revision studies, part %s, %s\n\n', part, datestr(now));
 if doA
     % extended model at default settings versus the plain model
     cfg = spiral_config('nominal', 31); P = cfg.params;
-    P0 = rmfield(P, {'aniso','gyro_scale','bw'});
-    Om = @(tt) 2*pi*max(5, 60-55/8*tt); th = @(tt) 2*pi*(60*tt - 0.5*55/8*tt.^2);
+    P0 = rmfield(P, {'gyro_scale','bw'});
+    Om = @(tt) 2*pi*max(0, 40-40/15*tt); th = @(tt) 2*pi*(40*tt - 0.5*40/15*tt.^2);
     z = [1e-3; -2e-3; 3e-3; 1e-3; 0.1; -0.2; 0.05; 0.3]; dmax = 0;
     for tt = [0 1.3 4.7]
         dmax = max(dmax, max(abs(rotor_rhs(tt,z,P,Om,th) - rotor_rhs(tt,z,P0,Om,th))));
@@ -123,20 +123,22 @@ if doA
              'A5 no physics seed',    {'use_seed',false} };
     rows = {};
     D2 = get_test('nominal');
+    dtD = D2.t(2) - D2.t(1);
+    k10 = round(0.01/dtD); k50 = round(0.05/dtD);   % 10 ms and 50 ms horizons
     for r = reps
         D = get_data('nominal', r);
         % A1: seed only
         Ex = diagnostics('heldout', 'x', {}, D, D2);
         Ey = diagnostics('heldout', 'y', {}, D, D2);
-        K20 = diagnostics('predict', Ex, Ey, D2, 20, 50);
-        K100 = diagnostics('predict', Ex, Ey, D2, 100, 50);
+        K20 = diagnostics('predict', Ex, Ey, D2, k10, 50);
+        K100 = diagnostics('predict', Ex, Ey, D2, k50, 50);
         rows(end+1,:) = {'A1 seed only', r, '', '', 0, 0, NaN, NaN, K20.nrmse_x, K20.nrmse_y, K100.nrmse_x, K100.nrmse_y, 0,0,0, '-','-'}; %#ok<AGROW>
         for c = 1:size(cfgs,1)
             ox = spiral_po_loop(D, 'x', cfgs{c,2}{:}, 'verbose', false);
             oy = spiral_po_loop(D, 'y', cfgs{c,2}{:}, 'verbose', false);
             Ex = diagnostics('heldout', ox.eqn, ox.active_names, D, D2); Ey = diagnostics('heldout', oy.eqn, oy.active_names, D, D2);
-            K20 = diagnostics('predict', Ex, Ey, D2, 20, 50);
-            K100 = diagnostics('predict', Ex, Ey, D2, 100, 50);
+            K20 = diagnostics('predict', Ex, Ey, D2, k10, 50);
+            K100 = diagnostics('predict', Ex, Ey, D2, k50, 50);
             [g, du, cr] = mechanisms(ox, oy);
             rows(end+1,:) = {cfgs{c,1}, r, strjoin(ox.active_names,' + '), strjoin(oy.active_names,' + '), ...
                 Ex.gain_pct, Ey.gain_pct, Ex.gain_true_pct, Ey.gain_true_pct, ...
@@ -145,7 +147,8 @@ if doA
                 r, cfgs{c,1}, Ex.gain_pct, Ey.gain_pct, K20.nrmse_x, K20.nrmse_y, g, du, cr, ...
                 strjoin(ox.active_names,', '), strjoin(oy.active_names,', '));
         end
-        H20 = havok_baseline(D, D2, 20); H100 = havok_baseline(D, D2, 100);
+        hs = max(1, round(0.002/dtD));
+        H20 = havok_baseline(D, D2, k10, 'stride', hs); H100 = havok_baseline(D, D2, k50, 'stride', hs);
         rows(end+1,:) = {'A6 HAVOK (forced)', r, sprintf('r=%d, q=%d', H20.r, H20.q), '', NaN, NaN, NaN, NaN, ...
             H20.nrmse_forced_x, H20.nrmse_forced_y, H100.nrmse_forced_x, H100.nrmse_forced_y, NaN,NaN,NaN,'-','-'}; %#ok<AGROW>
         rows(end+1,:) = {'A6 HAVOK (frozen forcing)', r, sprintf('r=%d, q=%d', H20.r, H20.q), '', NaN, NaN, NaN, NaN, ...
@@ -289,13 +292,13 @@ end
 
 %% ---------------- step 9: constant speed ----------------
 if doB
-    say('[9] Constant-speed (60 Hz) synthetic record, simultaneous x and y, 30 s, last 5 s (transient decayed)\n');
-    cfg = spiral_config('nominal', 31); cfg.f_start = 60; cfg.f_end = 60; cfg.Tend = 30;
+    say('[9] Constant-speed (30 Hz) synthetic record, simultaneous x and y, 30 s, last 5 s (transient decayed)\n');
+    cfg = spiral_config('nominal', 31); cfg.f_start = 30; cfg.f_end = 30; cfg.Tend = 30; cfg.params.dOmega = 0;
     D = simulate_rotor(cfg); keep = D.t >= 25;
     th = cumtrapz(D.t, D.Omega);
     for e = {'x','y'}
         if strcmp(e{1},'x'), s = D.x; sd = D.xd; else, s = D.y; sd = D.yd; end
-        S = [D.Omega.^2.*cos(th), D.Omega.^2.*sin(th), -sd, -s];
+        S = [D.Omega.^2.*cos(th) + D.Omegadot.*sin(th), D.Omega.^2.*sin(th) - D.Omegadot.*cos(th), -sd, -s];
         [L, nm] = build_library(D.x, D.y, D.xd, D.yd, D.Omega, D.Omegadot, e{1});
         % Omega^2*x is Omega0^2 times the seed column x and Omegadot*x is zero
         % at constant speed: both are removed before the rank check

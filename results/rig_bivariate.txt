@@ -37,12 +37,12 @@ Simultaneous x-y coast-down: 6700 samples at 1000 Hz (6.70 s); speed column 32.4
     y-eq selected: x, (x^2+y^2)*y, y^3, Omega^2*y
 
 (5) Synthetic control: exact speed / bin-limited tracked speed / straight line starting 4 Hz too high
-    nominal    exact      x: Omega*ydot, (x^2+y^2)*x                  y: Omega*xdot, (x^2+y^2)*y
-    nominal    tracked    x: Omega*ydot, (x^2+y^2)*x                  y: Omega*xdot, (x^2+y^2)*y
-    nominal    line +4 Hz x:                                          y: Omega*xdot, Omega^2*y
-    no_gyro    exact      x: (x^2+y^2)*x                              y: (x^2+y^2)*y
-    no_gyro    tracked    x: (x^2+y^2)*x                              y: (x^2+y^2)*y
-    no_gyro    line +4 Hz x: Omega*ydot, (x^2+y^2)*x, Omega^2*x       y: Omega*xdot, Omega^2*y
-    no_duffing exact      x:                                          y: 
-    no_duffing tracked    x:                                          y: 
-    no_duffing line +4 Hz x: Omega*ydot, (x^2+y^2)*xdot               y: Omega*xdot, x, Omega^2*y
+    nominal    exact      x: Omega*ydot, y, (x^2+y^2)*x               y: Omega*xdot, x, (x^2+y^2)*y
+    nominal    tracked    x: Omega*ydot, y, (x^2+y^2)*x               y: Omega*xdot, x, (x^2+y^2)*y
+    nominal    line +4 Hz x: Omega*ydot, y, (x^2+y^2)*xdot, Omega^2*x y: Omega*xdot, x, Omega^2*y
+    no_gyro    exact      x: y, (x^2+y^2)*x                           y: x, (x^2+y^2)*y
+    no_gyro    tracked    x: y, (x^2+y^2)*x                           y: x, (x^2+y^2)*y
+    no_gyro    line +4 Hz x: Omega*ydot, y, (x^2+y^2)*xdot, Omega^2*x y: Omega*xdot, x, Omega^2*y
+    no_duffing exact      x: Omega*ydot, y                            y: Omega*xdot, x, Omega^2*y
+    no_duffing tracked    x: Omega*ydot, y                            y: Omega*xdot, x
+    no_duffing line +4 Hz x: Omega*ydot, y, (x^2+y^2)*xdot, Omega^2*x y: Omega*xdot, x, Omega^2*y
