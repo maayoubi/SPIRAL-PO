@@ -48,21 +48,22 @@ fclose(fid);
 
 % ---------------- figure: full record (left) and zoom (right) ----------------
 blue = [0.13 0.27 0.60]; red = [0.80 0.15 0.15];
-ylab = {'x [mm]', 'y [mm]', '\alpha [mrad]', '\beta [mrad]'};
-zoom = D.t >= 9.0 & D.t <= 10.0;
+ylab = {'x [mm]', 'y [mm]', '\alpha [deg]', '\beta [deg]'};
+plotScale = [1e3, 1e3, 180/pi, 180/pi];          % m to mm; rad to deg
+zoom = D.t >= 8.0 & D.t <= 11.0;
 fig = figure('Units', 'centimeters', 'Position', [2 2 18 16], 'Color', 'w');
 for k = 1:4
-    tr = 1e3*D.traj(:,k); es = 1e3*z(:,k);
+    tr = plotScale(k)*D.traj(:,k); es = plotScale(k)*z(:,k);
     subplot(4, 2, 2*k-1);
-    plot(D.t, tr, '-', 'Color', blue, 'LineWidth', 0.8); hold on
-    plot(D.t, es, '--', 'Color', red, 'LineWidth', 0.8);
+    plot(D.t, tr, '-', 'Color', blue, 'LineWidth', 1.5); hold on
+    plot(D.t, es, '--', 'Color', red, 'LineWidth', 1.0);
     ylabel(ylab{k}); xlim([D.t(1) D.t(end)]); box on
     if k == 1, legend({'true', 'EKF estimate'}, 'Location', 'northeast', 'Box', 'off'); end
     if k == 4, xlabel('time [s]'); end
     subplot(4, 2, 2*k);
-    plot(D.t(zoom), tr(zoom), '-', 'Color', blue, 'LineWidth', 1.0); hold on
+    plot(D.t(zoom), tr(zoom), '-', 'Color', blue, 'LineWidth', 1.5); hold on
     plot(D.t(zoom), es(zoom), '--', 'Color', red, 'LineWidth', 1.0);
-    xlim([9.0 10.0]); box on
+    xlim([8.0 11.0]); box on
     if k == 4, xlabel('time [s]'); end
 end
 set(findall(fig, '-property', 'FontSize'), 'FontSize', 9);
